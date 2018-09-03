@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import Card from "@material-ui/core/Card";
-import { CardContent } from "../node_modules/@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+import { Container, Row, Col } from "reactstrap";
+import Panel from "./components/Panel.js";
 import "./App.css";
 
 const frameworks = ["React", "Angular", "Ember", "Vue"];
@@ -9,17 +8,35 @@ const frameworks = ["React", "Angular", "Ember", "Vue"];
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Card className={{ minWidth: 275, height: 140 }}>
-          <CardContent>
-            {frameworks.map(framework => (
-              <Typography variant="title" gutterBottom>
-                {framework}
-              </Typography>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+      <Container className="App">
+        <Row>
+          <Col>
+            <h2 className="display-4" style={{ textAlign: "center" }}>
+              Comparing popular Javascript Frameworks
+            </h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Panel
+              title={"Commits"}
+              subtitle={
+                "Commit activity gives us insight on project development"
+              }
+            />
+            <Panel
+              title={"Stars"}
+              subtitle={"Star count could indicate favorability of the project"}
+            />
+            <Panel
+              title={"Issue ratio"}
+              subtitle={
+                "Number of issues raised vs issues closed could forecast how quickly bugs are fixed"
+              }
+            />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
