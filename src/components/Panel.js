@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 
 const Panel = props => {
-  const { title, subtitle } = props;
+  const { title, subtitle, body } = props;
 
   return (
     <div>
@@ -21,10 +21,7 @@ const Panel = props => {
           <CardSubtitle>{subtitle}</CardSubtitle>
         </CardBody>
         <CardBody>
-          <CardText>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </CardText>
+          <CardText>Star count: {body}</CardText>
           <CardLink href="#">Card Link</CardLink>
           <CardLink href="#">Another Link</CardLink>
         </CardBody>
