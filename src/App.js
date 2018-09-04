@@ -4,7 +4,14 @@ import Panel from "./components/Panel.js";
 import "./App.css";
 
 const frameworks = ["React", "Angular", "Ember", "Vue"];
-// TODO - Add framework github links to retrieve project stats
+const links = [
+  "https://api.github.com/repos/facebook/react",
+  "https://api.github.com/repos/angular/angular.js",
+  "https://api.github.com/repos/emberjs/ember.js",
+  "https://api.github.com/repos/vuejs/vue"
+];
+
+// TODO - Finish retrieving the rest of stats + refresh -- put a react table with summary
 
 class App extends Component {
   state = {
@@ -12,14 +19,20 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch("https://api.github.com/repos/facebook/react")
-      .then(res => res.json())
-      .then(body => {
-        console.log(body.stargazers_count);
-        this.setState({
-          stars: body.stargazers_count
+    // Get stars
+    const headers = new Headers();
+    headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6");
+    links.forEach((link, i) => {
+      fetch(link, { headers })
+        .then(res => res.json())
+        .then(body => {
+          this.setState(prevState => {
+            const copy = prevState.stars.slice();
+            copy[i] = body.stargazers_count;
+            return { stars: copy };
+          });
         });
-      });
+    });
   }
 
   render() {
@@ -30,6 +43,8 @@ class App extends Component {
             <h2 className="display-4" style={{ textAlign: "center" }}>
               Comparing popular Javascript Frameworks
             </h2>
+            <br />
+            <h5>This page refreshes every 2 minutes</h5>
           </Col>
         </Row>
         <Row>
@@ -43,7 +58,8 @@ class App extends Component {
             <Panel
               title={"Stars"}
               subtitle={"Star count could indicate favorability of the project"}
-              body={this.state.stars}
+              data={this.state.stars}
+              frameworks={frameworks}
             />
             <Panel
               title={"Issue ratio"}
