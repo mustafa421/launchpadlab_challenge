@@ -26,14 +26,12 @@ const Panel = props => {
       accessor: "forks"
     }
   ];
-  // TODO - Add switch statement to retrieve specific components
+
   return (
     <div>
       <Card>
         <CardBody>
-          <p>{subtitle}</p>
-        </CardBody>
-        <CardBody>
+          {subtitle}
           <ReactTable
             data={data}
             columns={columns}

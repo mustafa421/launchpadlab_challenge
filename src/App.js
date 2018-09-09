@@ -18,8 +18,6 @@ const issueLinks = [
   "https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:open"
 ];
 
-// TODO - Finish retrieving the rest of stats + refresh -- put a react table with summary
-
 class App extends Component {
   state = {
     time: 0,
@@ -27,8 +25,8 @@ class App extends Component {
   };
 
   retrieveData = () => {
-    console.log("Refreshed");
     this.setState(() => ({ time: new Date().toTimeString() }));
+
     const headers = new Headers();
     headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6"); // Better handling of authentication
     frameworks.forEach((framework, i) => {
@@ -74,24 +72,47 @@ class App extends Component {
               Comparing popular Javascript Frameworks
             </h2>
             <br />
-            <h5>This page refreshes every minute</h5>
+            <h5>This page updates every minute</h5>
           </Col>
         </Row>
         <Row>
           <Col>
             <Panel
               subtitle={
-                <p>
-                  Listed below are the most popular Javascript frameworks on
-                  Github. I've selected three different repo qualities to help
-                  pick a favorite. To sort the data, simply click on any of the
-                  columns.
-                </p>
+                <div>
+                  <p>
+                    Listed below are the most popular Javascript frameworks on
+                    Github. I've selected three different repo qualities to help
+                    pick a favorite. To sort the data, simply click on any of
+                    the columns. Here is why I selected the following 3
+                    categories:
+                  </p>
+                  <br />
+                  <ul style={{ textAlign: "left" }}>
+                    <li>
+                      Stars - This gives us a hint on general favorability of
+                      the project
+                    </li>
+                    <li>
+                      Forks - Larger projects are usually read-only and are not
+                      directly editable by the general public. In order to
+                      introduce changes to the code base, a person has to fork.
+                      A high number of forks may correlate with a higher
+                      contribution count.
+                    </li>
+                    <li>
+                      Open Issues - Issues could give us insight on the
+                      stability of the project. Thus, many open issues could
+                      correlate with more bugs.
+                    </li>
+                  </ul>
+                </div>
               }
               data={this.state.data}
             />
           </Col>
         </Row>
+        <br />
         <Row>
           <Col>
             <Alert color="warning">Last refresh on {this.state.time}</Alert>
