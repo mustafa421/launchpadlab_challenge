@@ -1,40 +1,46 @@
 import React from "react";
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryAxis,
-  VictoryZoomContainer
-} from "victory";
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
-import { Card, CardBody, CardTitle, CardSubtitle } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
 
 const Panel = props => {
-  const { title, subtitle, data, frameworks } = props;
+  const { subtitle, data } = props;
   if (!data) return null;
 
+  const columns = [
+    {
+      Header: "Framework",
+      accessor: "framework"
+    },
+    {
+      Header: "Stars",
+      accessor: "stars"
+    },
+    {
+      Header: "Open Issues",
+      accessor: "openIssues"
+    },
+    {
+      Header: "Forks",
+      accessor: "forks"
+    }
+  ];
   // TODO - Add switch statement to retrieve specific components
   return (
     <div>
       <Card>
         <CardBody>
-          <CardTitle>{title}</CardTitle>
-          <CardSubtitle>{subtitle}</CardSubtitle>
+          <p>{subtitle}</p>
         </CardBody>
         <CardBody>
-          <VictoryChart
-            domainPadding={20}
-            // containerComponent={<VictoryZoomContainer />}
-          >
-            <VictoryAxis tickValues={[1, 2, 3, 4]} tickFormat={frameworks} />
-            <VictoryAxis
-              dependentAxis
-              // tickFormat specifies how ticks should be displayed
-              tickFormat={x => `${x / 1000}k`}
-            />
-            <VictoryBar
-              data={data.map((stars, index) => ({ x: index + 1, y: stars }))}
-            />
-          </VictoryChart>
+          <ReactTable
+            data={data}
+            columns={columns}
+            defaultPageSize={4}
+            className="-striped -highlight"
+            showPaginationBottom={false}
+          />
         </CardBody>
       </Card>
     </div>

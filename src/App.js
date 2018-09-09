@@ -11,26 +11,75 @@ const links = [
   "https://api.github.com/repos/vuejs/vue"
 ];
 
+const issueLinks = [
+  "https://api.github.com/search/issues?q=repo:facebook/react+type:issue+state:open",
+  "https://api.github.com/search/issues?q=repo:angular/angular.js+type:issue+state:open",
+  "https://api.github.com/search/issues?q=repo:emberjs/ember.js+type:issue+state:open",
+  "https://api.github.com/search/issues?q=repo:vuejs/vue+type:issue+state:open"
+];
+
 // TODO - Finish retrieving the rest of stats + refresh -- put a react table with summary
 
 class App extends Component {
   state = {
-    stars: []
+    // stars: [],
+    // openIssues: []
+    data: [
+      // {
+      //   framework: "React",
+      //   stars: 10,
+      //   openIssues: 20,
+      //   commits: 5
+      // },
+      // {
+      //   framework: "Angular",
+      //   stars: 2,
+      //   openIssues: 50,
+      //   commits: 53
+      // },
+      // {
+      //   framework: "Ember",
+      //   stars: 30,
+      //   openIssues: 10,
+      //   commits: 95
+      // },
+      // {
+      //   framework: "Vue",
+      //   stars: 23,
+      //   openIssues: 20,
+      //   commits: 5
+      // }
+    ]
   };
 
   componentDidMount() {
-    // Get stars
     const headers = new Headers();
-    headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6");
-    links.forEach((link, i) => {
-      fetch(link, { headers })
+    headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6"); // Better handling of authentication
+    frameworks.forEach((framework, i) => {
+      const frameworkObj = {};
+      frameworkObj.framework = framework;
+
+      // Get stars + forks
+      fetch(links[i], { headers })
         .then(res => res.json())
         .then(body => {
-          this.setState(prevState => {
-            const copy = prevState.stars.slice();
-            copy[i] = body.stargazers_count;
-            return { stars: copy };
-          });
+          frameworkObj.stars = body.stargazers_count.toLocaleString();
+          frameworkObj.forks = body.forks.toLocaleString();
+        })
+        .then(() => {
+          // Get open issues
+          fetch(issueLinks[i], { headers })
+            .then(res => res.json())
+            .then(body => {
+              frameworkObj.openIssues = body.total_count.toLocaleString();
+            })
+            .then(() =>
+              this.setState(prevState => {
+                const copy = prevState.data.slice();
+                copy[i] = frameworkObj;
+                return { data: copy };
+              })
+            );
         });
     });
   }
@@ -50,22 +99,15 @@ class App extends Component {
         <Row>
           <Col>
             <Panel
-              title={"Commits"}
               subtitle={
-                "Commit activity gives us insight on project development"
+                <p>
+                  Listed below are the most popular Javascript frameworks on
+                  Github. I've selected three different repo qualities to help
+                  pick a favorite. To sort the data, simply click on any of the
+                  columns.
+                </p>
               }
-            />
-            <Panel
-              title={"Stars"}
-              subtitle={"Star count could indicate favorability of the project"}
-              data={this.state.stars}
-              frameworks={frameworks}
-            />
-            <Panel
-              title={"Issue ratio"}
-              subtitle={
-                "Number of issues raised vs issues closed could forecast how quickly bugs are fixed"
-              }
+              data={this.state.data}
             />
           </Col>
         </Row>
