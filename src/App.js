@@ -24,35 +24,11 @@ class App extends Component {
   state = {
     // stars: [],
     // openIssues: []
-    data: [
-      // {
-      //   framework: "React",
-      //   stars: 10,
-      //   openIssues: 20,
-      //   commits: 5
-      // },
-      // {
-      //   framework: "Angular",
-      //   stars: 2,
-      //   openIssues: 50,
-      //   commits: 53
-      // },
-      // {
-      //   framework: "Ember",
-      //   stars: 30,
-      //   openIssues: 10,
-      //   commits: 95
-      // },
-      // {
-      //   framework: "Vue",
-      //   stars: 23,
-      //   openIssues: 20,
-      //   commits: 5
-      // }
-    ]
+    data: []
   };
 
-  componentDidMount() {
+  retrieveData = () => {
+    console.log("Refreshed");
     const headers = new Headers();
     headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6"); // Better handling of authentication
     frameworks.forEach((framework, i) => {
@@ -82,6 +58,11 @@ class App extends Component {
             );
         });
     });
+  };
+
+  componentDidMount() {
+    this.retrieveData();
+    setInterval(this.retrieveData, 60000);
   }
 
   render() {
