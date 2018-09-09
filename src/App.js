@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Alert } from "reactstrap";
 import Panel from "./components/Panel.js";
 import "./App.css";
 
@@ -22,13 +22,13 @@ const issueLinks = [
 
 class App extends Component {
   state = {
-    // stars: [],
-    // openIssues: []
+    time: 0,
     data: []
   };
 
   retrieveData = () => {
     console.log("Refreshed");
+    this.setState(() => ({ time: new Date().toTimeString() }));
     const headers = new Headers();
     headers.append("Authorization", "Basic bXVzdGFmYTQyMTo1JDY5ckRFU1JzXll6"); // Better handling of authentication
     frameworks.forEach((framework, i) => {
@@ -74,7 +74,7 @@ class App extends Component {
               Comparing popular Javascript Frameworks
             </h2>
             <br />
-            <h5>This page refreshes every 2 minutes</h5>
+            <h5>This page refreshes every minute</h5>
           </Col>
         </Row>
         <Row>
@@ -90,6 +90,11 @@ class App extends Component {
               }
               data={this.state.data}
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Alert color="warning">Last refresh on {this.state.time}</Alert>
           </Col>
         </Row>
       </Container>
